@@ -312,7 +312,160 @@ Return ONLY a JSON object in this exact format:
 
 
 # ============================================================
-# 5. ANSWER GENERATION - OpenRouter LLM
+# 5. SELF-CORRECTION - Validate retrieval and rewrite query
+# ============================================================
+def validate_retrieval(query: str, retrieved_docs: List[Document], model=LLM_MODEL) -> dict:
+    """
+    LLM acts as a JUDGE to validate if retrieved documents are relevant to the query.
+    
+    Returns:
+        dict with keys:
+        - is_relevant: bool - True if docs can answer the query
+        - confidence: float - 0.0 to 1.0 confidence score
+        - reason: str - Why relevant or not
+        - missing_info: str - What information is missing (used for rewriting)
+    """
+    import json
+    import re
+    
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY")
+    )
+    
+    # Build context from retrieved docs
+    docs_summary = "\n\n".join([
+        f"[Doc {i+1} - {doc.metadata.get('company', 'N/A')} {doc.metadata.get('year', '')}]\n{doc.page_content[:500]}..."
+        for i, doc in enumerate(retrieved_docs[:5])
+    ])
+    
+    prompt = f"""You are a retrieval validator for a financial RAG system. Your job is to judge whether the retrieved documents contain relevant information to answer the user's query.
+
+USER QUERY: "{query}"
+
+RETRIEVED DOCUMENTS:
+{docs_summary}
+
+Analyze carefully:
+1. Does the query ask about a specific company? Do the documents match that company?
+2. Does the query ask about a specific year? Do the documents match that year?
+3. Do the documents contain the specific information requested (revenue, risk factors, etc.)?
+
+Respond with ONLY a JSON object in this exact format:
+{{
+    "is_relevant": true or false,
+    "confidence": 0.0 to 1.0,
+    "reason": "brief explanation of why relevant or not",
+    "missing_info": "what specific information is missing or wrong (e.g., 'documents are from 2022 but query asks for 2023')"
+}}"""
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are a strict retrieval validator. Return only valid JSON. Be critical - if there's a year mismatch or company mismatch, mark as not relevant."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.1,
+            max_tokens=300
+        )
+        
+        content = response.choices[0].message.content.strip()
+        
+        # Handle potential markdown code blocks
+        if "```" in content:
+            match = re.search(r'```(?:json)?\s*(.*?)\s*```', content, re.DOTALL)
+            if match:
+                content = match.group(1).strip()
+        
+        # Try to find JSON object in the response
+        json_match = re.search(r'\{.*\}', content, re.DOTALL)
+        if json_match:
+            content = json_match.group(0)
+        
+        result = json.loads(content)
+        
+        # Ensure all required fields exist
+        return {
+            "is_relevant": result.get("is_relevant", False),
+            "confidence": result.get("confidence", 0.5),
+            "reason": result.get("reason", "Unknown"),
+            "missing_info": result.get("missing_info", "")
+        }
+        
+    except Exception as e:
+        print(f"    Validation failed: {e}")
+        # Default to relevant on error to avoid blocking
+        return {
+            "is_relevant": True,
+            "confidence": 0.5,
+            "reason": f"Validation error: {e}",
+            "missing_info": ""
+        }
+
+
+def rewrite_query(original_query: str, validation_result: dict, model=LLM_MODEL) -> str:
+    """
+    LLM acts as a REWRITER to improve the query based on validation feedback.
+    
+    Uses the 'reason' and 'missing_info' from validation to create a better query
+    that will retrieve more relevant documents.
+    
+    Returns:
+        - Rewritten query string, OR
+        - "QUERY_IMPOSSIBLE" if the data simply doesn't exist in our dataset
+    """
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY")
+    )
+    
+    prompt = f"""You are a query rewriter for a financial RAG system. The original query failed to retrieve relevant documents.
+
+AVAILABLE DATA: We only have SEC 10-K filings for these 5 companies: Apple (AAPL), Microsoft (MSFT), Google/Alphabet (GOOGL), Amazon (AMZN), Meta/Facebook (META). Years available: 2022 and 2023 only.
+
+ORIGINAL QUERY: "{original_query}"
+
+PROBLEM: {validation_result['reason']}
+
+MISSING INFORMATION: {validation_result['missing_info']}
+
+RULES:
+1. DO NOT change the company or topic the user is asking about
+2. If the user asks about Netflix, Tesla, or any company NOT in our dataset → return exactly: QUERY_IMPOSSIBLE
+3. If the user asks about years before 2022 or after 2023 → return exactly: QUERY_IMPOSSIBLE  
+4. If the query IS about one of our 5 companies (AAPL, MSFT, GOOGL, AMZN, META) for 2022-2023, rewrite it to be more specific:
+   - Add the ticker symbol (e.g., AAPL, MSFT)
+   - Add the year (2022 or 2023)
+   - Add relevant financial terms from SEC 10-K filings
+
+Return ONLY the rewritten query OR "QUERY_IMPOSSIBLE", nothing else."""
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are a financial search query rewriter. Return only the rewritten query or QUERY_IMPOSSIBLE. No explanations."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3,
+            max_tokens=150
+        )
+        
+        rewritten = response.choices[0].message.content.strip()
+        
+        # Clean up any quotes that might be in the response
+        rewritten = rewritten.strip('"\'')
+        
+        return rewritten
+        
+    except Exception as e:
+        print(f"    Query rewrite failed: {e}")
+        return original_query  # Fall back to original
+
+
+# ============================================================
+# 6. ANSWER GENERATION - OpenRouter LLM
 # ============================================================
 def generate_answer(query, retrieved_docs, model=LLM_MODEL):
     """Generate answer using OpenRouter LLM."""
@@ -404,8 +557,22 @@ class FinancialRAG:
         self.is_initialized = True
         print("Loaded successfully!")
     
-    def ask(self, query, k=5):
-        """Ask a question and get an answer."""
+    def ask(self, query, k=5, max_retries=2, use_self_correction=True):
+        """
+        Ask a question and get an answer with optional self-correction.
+        
+        Self-Correction Loop:
+        1. Retrieve documents
+        2. Validate retrieval (LLM judges relevance)
+        3. If not relevant and retries left → Rewrite query and retry
+        4. Generate answer from final retrieved docs
+        
+        Args:
+            query: The user's question
+            k: Number of documents to retrieve
+            max_retries: Maximum number of query rewrites (default: 2)
+            use_self_correction: Enable/disable self-correction loop (default: True)
+        """
         if not self.is_initialized:
             print("RAG not initialized. Running ingest()...")
             self.ingest()
@@ -414,34 +581,123 @@ class FinancialRAG:
         print(f"QUERY: {query}")
         print("=" * 60)
         
-        # Retrieve relevant documents
-        print("\n[Retrieving relevant documents...]")
-        retrieved_docs = self.retriever.invoke(query)
+        current_query = query
+        retrieved_docs = None
+        validation_history = []  # Track all validation attempts
         
-        print(f"\nRetrieved {len(retrieved_docs)} documents:")
-        for i, doc in enumerate(retrieved_docs[:5], 1):
-            company = doc.metadata.get('company', 'N/A')
-            year = doc.metadata.get('year', '')
-            preview = doc.page_content[:100].replace('\n', ' ')
-            print(f"  [{i}] {company} {year}: {preview}...")
+        # ========== SELF-CORRECTION LOOP ==========
+        for attempt in range(max_retries + 1):
+            attempt_num = attempt + 1
+            
+            # Step 1: Retrieve documents
+            print(f"\n[Attempt {attempt_num}/{max_retries + 1}] Retrieving documents...")
+            if attempt > 0:
+                print(f"    Using rewritten query: \"{current_query}\"")
+            
+            retrieved_docs = self.retriever.invoke(current_query)
+            
+            print(f"\nRetrieved {len(retrieved_docs)} documents:")
+            for i, doc in enumerate(retrieved_docs[:5], 1):
+                company = doc.metadata.get('company', 'N/A')
+                year = doc.metadata.get('year', '')
+                preview = doc.page_content[:100].replace('\n', ' ')
+                print(f"  [{i}] {company} {year}: {preview}...")
+            
+            # Step 2: Validate retrieval (skip if self-correction disabled)
+            if not use_self_correction:
+                print("\n[Self-correction disabled, skipping validation]")
+                break
+            
+            print("\n[Validating retrieval...]")
+            validation = validate_retrieval(current_query, retrieved_docs)
+            validation_history.append({
+                "attempt": attempt_num,
+                "query": current_query,
+                "validation": validation
+            })
+            
+            print(f"    Relevant: {validation['is_relevant']} (confidence: {validation['confidence']:.2f})")
+            print(f"    Reason: {validation['reason']}")
+            
+            # Step 3: Check if relevant or out of retries
+            if validation['is_relevant']:
+                print("\n[Validation PASSED - proceeding to answer generation]")
+                break
+            
+            if attempt >= max_retries:
+                print(f"\n[Max retries ({max_retries}) reached - proceeding with best available docs]")
+                break
+            
+            # Step 4: Rewrite query using feedback
+            print(f"\n[Validation FAILED - rewriting query...]")
+            print(f"    Missing info: {validation['missing_info']}")
+            
+            new_query = rewrite_query(current_query, validation)
+            print(f"    Rewritten: \"{new_query}\"")
+            
+            # Check if query is impossible (data doesn't exist in our dataset)
+            if new_query.upper().strip() == "QUERY_IMPOSSIBLE":
+                print("\n[QUERY IMPOSSIBLE - requested data is not in our dataset]")
+                print("    Available: AAPL, MSFT, GOOGL, AMZN, META (years 2022-2023)")
+                # Return early with a clear message
+                answer = f"I cannot answer this question. The requested information is not available in our dataset. We only have SEC 10-K filings for: Apple (AAPL), Microsoft (MSFT), Google (GOOGL), Amazon (AMZN), and Meta (META) for fiscal years 2022 and 2023."
+                print("\n" + "=" * 60)
+                print("ANSWER:")
+                print("=" * 60)
+                print(answer)
+                print("=" * 60)
+                return {
+                    "query": query,
+                    "final_query": current_query,
+                    "answer": answer,
+                    "sources": [],
+                    "self_correction": {
+                        "enabled": True,
+                        "attempts": len(validation_history),
+                        "query_impossible": True,
+                        "history": validation_history
+                    }
+                }
+            
+            # Avoid infinite loop if rewrite returns same query
+            if new_query.lower().strip() == current_query.lower().strip():
+                print("    [Warning: Rewritten query is identical, stopping retries]")
+                break
+            
+            current_query = new_query
         
-        # Generate answer
+        # ========== GENERATE ANSWER ==========
         print("\n[Generating answer...]")
-        answer = generate_answer(query, retrieved_docs)
+        answer = generate_answer(query, retrieved_docs)  # Use ORIGINAL query for answer
         
         print("\n" + "=" * 60)
         print("ANSWER:")
         print("=" * 60)
         print(answer)
+        
+        # Show self-correction summary if it was used
+        if use_self_correction and len(validation_history) > 1:
+            print("\n" + "-" * 40)
+            print("SELF-CORRECTION SUMMARY:")
+            for vh in validation_history:
+                status = "PASS" if vh['validation']['is_relevant'] else "FAIL"
+                print(f"  Attempt {vh['attempt']}: [{status}] {vh['query'][:50]}...")
+        
         print("=" * 60)
         
         return {
             "query": query,
+            "final_query": current_query,
             "answer": answer,
             "sources": [
                 {"company": d.metadata.get('company'), "year": d.metadata.get('year')}
                 for d in retrieved_docs
-            ]
+            ],
+            "self_correction": {
+                "enabled": use_self_correction,
+                "attempts": len(validation_history),
+                "history": validation_history
+            }
         }
 
 
