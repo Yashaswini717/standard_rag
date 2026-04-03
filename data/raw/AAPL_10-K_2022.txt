@@ -1,0 +1,368 @@
+
+UNITED STATES SECURITIES AND EXCHANGE COMMISSION
+Washington, D.C. 20549
+FORM 10-K
+
+ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934
+
+For the fiscal year ended December 31, 2022
+
+Commission File Number: 001-60252
+
+Apple Inc.
+(Exact name of registrant as specified in its charter)
+
+===============================================================================
+PART I
+===============================================================================
+
+ITEM 1. BUSINESS
+
+Apple Inc. (the "Company", "we", "us", or "our") is a leading technology company.
+
+Our Business Overview
+
+For fiscal year 2022, Apple Inc. reported total revenue of $379.4 billion, 
+representing a 14.7% increase 
+compared to the prior fiscal year. Net income for 2022 was $79.1 billion.
+
+Revenue Segments:
+- Products: $255.4 billion (67% of total revenue)
+- Services: $124.1 billion (33% of total revenue)
+
+Geographic Revenue Distribution:
+- Americas: $159.4 billion (42%)
+- Europe: $94.9 billion (25%)
+- Greater China: $68.3 billion (18%)
+- Rest of Asia Pacific: $56.9 billion (15%)
+
+===============================================================================
+ITEM 1A. RISK FACTORS
+===============================================================================
+
+Investing in our common stock involves significant risks. The following describes the most significant 
+factors that could adversely affect our business, financial condition, and results of operations.
+
+Market and Economic Risks
+
+Our business is subject to various market and economic conditions. Economic downturns, inflation, 
+changes in consumer spending, and other macroeconomic factors could adversely affect demand for 
+our products and services. In fiscal year 2022, we experienced impacts from global supply chain 
+disruptions and inflationary pressures.
+
+Competition Risk
+
+We face intense competition in all our business segments. Our competitors include large, 
+well-established companies with significant resources. If we are unable to compete effectively, 
+our market share and profitability could decline.
+
+Technology and Cybersecurity Risks
+
+Our business relies heavily on complex technology systems. Cybersecurity threats, system failures, 
+or data breaches could disrupt our operations and harm our reputation. We invested 
+$30.3 billion in research and development during 2022.
+
+===============================================================================
+ITEM 6. SELECTED FINANCIAL DATA
+===============================================================================
+
+FIVE-YEAR FINANCIAL SUMMARY
+(In millions, except per share amounts)
+
+                                    2022          2021        2020
+                                    ------          ------          ------
+Net sales                         $379,423     $360,452     $341,481
+Cost of sales                     $219,840     $208,848     $197,856
+Gross margin                      $159,583     $151,603     $143,624
+Operating income                  $117,132     $107,761     $101,905
+Net income                        $79,061     $73,527     $69,574
+
+Earnings per share:
+  Basic                           $5.27          $4.90          $4.64
+  Diluted                         $5.17          $4.80          $4.53
+
+Cash dividends per share          $1.32          $1.25          $1.19
+
+Total assets                      $455,308     $446,201     $432,542
+Long-term debt                    $94,856     $96,753     $99,599
+Shareholders' equity              $189,711     $180,226     $174,535
+
+===============================================================================
+ITEM 7. MANAGEMENT'S DISCUSSION AND ANALYSIS
+===============================================================================
+
+Executive Overview
+
+Fiscal 2022 Results
+
+Total net revenue for fiscal 2022 was $379.4 billion compared to 
+$330.7 billion in fiscal 2021, 
+an increase of 14.7%. The increase was primarily driven by strong 
+performance in our Services segment and increased demand for our flagship products.
+
+Gross Margin
+
+Gross margin for fiscal 2022 was 42.1%, compared to 
+41.6% in fiscal 2021. The increase in gross margin was 
+primarily due to cost efficiencies and favorable product mix.
+
+Operating Expenses
+
+Research and Development: $30.3 billion (9.7% of revenue)
+Selling, General and Administrative: $27.4 billion (5.2% of revenue)
+
+Net Income and Earnings Per Share
+
+Net income for fiscal 2022 was $79.1 billion, or $5.27 per 
+diluted share, compared to net income of $73.5 billion, or 
+$4.80 per diluted share, in fiscal 2021.
+
+Segment Performance
+
+Products Segment
+
+The Products segment generated revenue of $255.4 billion in fiscal 2022, 
+representing 67% of total revenue. Key product categories include:
+
+- Flagship Products: $153.2 billion
+- Accessories: $63.8 billion
+- Other Products: $38.3 billion
+
+Services Segment
+
+The Services segment generated revenue of $124.1 billion in fiscal 2022, 
+representing 33% of total revenue. Services include:
+
+- Subscription Services: $62.0 billion
+- Cloud Services: $37.2 billion
+- Professional Services: $24.8 billion
+
+===============================================================================
+ITEM 8. FINANCIAL STATEMENTS
+===============================================================================
+
+CONSOLIDATED BALANCE SHEETS
+(In millions)
+                                                    December 31,
+                                               2022          2021
+                                               ------          ------
+ASSETS
+Current assets:
+  Cash and cash equivalents                  $56,913     $62,605
+  Short-term investments                     $45,531     $43,254
+  Accounts receivable, net                   $30,354     $29,747
+  Inventories                                $18,971     $17,453
+  Other current assets                       $37,942     $36,045
+                                             -----------     -----------
+Total current assets                         $189,711     $185,917
+
+Non-current assets:
+  Property, plant and equipment, net         $94,856     $90,113
+  Goodwill                                   $56,913     $56,913
+  Intangible assets, net                     $37,942     $39,839
+  Other non-current assets                   $75,885     $69,814
+                                             -----------     -----------
+Total assets                                 $455,308     $446,201
+
+LIABILITIES AND SHAREHOLDERS' EQUITY
+Current liabilities:
+  Accounts payable                           $37,942     $36,804
+  Accrued expenses                           $30,354     $29,140
+  Current portion of long-term debt          $18,971     $20,868
+  Deferred revenue                           $26,560     $24,435
+                                             -----------     -----------
+Total current liabilities                    $113,827     $111,550
+
+Long-term debt                               $94,856     $96,753
+Other non-current liabilities                $56,913     $55,775
+                                             -----------     -----------
+Total liabilities                            $265,596     $262,940
+
+Shareholders' equity                         $189,711     $180,226
+                                             -----------     -----------
+Total liabilities and equity                 $455,308     $446,201
+
+CONSOLIDATED STATEMENTS OF OPERATIONS
+(In millions, except per share amounts)
+
+                                               Years Ended December 31,
+                                          2022          2021        2020
+                                          ------          ------          ------
+Net sales:
+  Products                              $255,356     $245,142     $234,928
+  Services                              $124,067     $114,142     $109,179
+                                        -----------     -----------     -----------
+Total net sales                         $379,423     $360,452     $341,481
+
+Cost of sales:
+  Products                              $165,981     $159,342     $154,363
+  Services                              $43,423     $39,950     $38,213
+                                        -----------     -----------     -----------
+Total cost of sales                     $219,840     $208,848     $200,055
+
+Gross margin                            $159,583     $151,603     $142,029
+
+Operating expenses:
+  Research and development              $30,321     $28,805     $27,289
+  Selling, general and administrative   $27,387     $26,292     $25,196
+                                        -----------     -----------     -----------
+Total operating expenses                $57,708     $55,111     $52,515
+
+Operating income                        $117,132     $111,275     $103,076
+
+Other income/(expense), net             $3,794     $3,415     $3,225
+                                        -----------     -----------     -----------
+Income before income taxes              $98,826     $93,885     $86,967
+
+Provision for income taxes              $19,765     $18,579     $17,196
+                                        -----------     -----------     -----------
+Net income                              $79,061     $75,503     $69,969
+
+Earnings per share:
+  Basic                                 $5.27          $5.03          $4.66
+  Diluted                               $5.17          $4.95          $4.59
+
+Weighted-average shares outstanding:
+  Basic                                 15,000     15,300     15,750
+  Diluted                               15,200     15,504     15,960
+
+CONSOLIDATED STATEMENTS OF CASH FLOWS
+(In millions)
+
+                                               Years Ended December 31,
+                                          2022          2021
+                                          ------          ------
+Cash flows from operating activities:
+  Net income                            $79,061     $75,503
+  Depreciation and amortization         $15,177     $14,570
+  Stock-based compensation              $7,588     $7,133
+  Changes in working capital            $-3,794     $-4,174
+                                        -----------     -----------
+Net cash from operating activities      $102,779     $97,640
+
+Cash flows from investing activities:
+  Capital expenditures                  ($15,177)    ($14,873)
+  Acquisitions, net of cash             ($7,588)    ($3,794)
+  Purchases of investments              ($56,913)    ($51,222)
+  Sales/maturities of investments       $45,531     $41,888
+                                        -----------     -----------
+Net cash from investing activities      ($30,354)    ($25,801)
+
+Cash flows from financing activities:
+  Dividends paid                        ($19,765)    ($18,975)
+  Share repurchases                     ($31,624)    ($30,992)
+  Proceeds from debt issuance           $7,588     $9,106
+  Repayments of debt                    ($11,383)    ($10,814)
+                                        -----------     -----------
+Net cash from financing activities      ($47,437)    ($43,642)
+
+Net change in cash                      $7,588     $-3,794
+Cash at beginning of period             $49,325     $51,791
+                                        -----------     -----------
+Cash at end of period                   $56,913     $49
+
+===============================================================================
+NOTES TO CONSOLIDATED FINANCIAL STATEMENTS
+===============================================================================
+
+NOTE 1 - SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES
+
+Revenue Recognition
+
+We recognize revenue when we transfer promised goods or services to customers in an amount that 
+reflects the consideration to which we expect to be entitled. For products, revenue is generally 
+recognized at the point in time when control transfers to the customer. For services, revenue 
+is recognized over time as services are delivered.
+
+NOTE 2 - REVENUE
+
+Disaggregation of Revenue
+
+The following table shows revenue by major product and service category for fiscal 2022:
+
+Product Category                     Revenue (millions)    % of Total
+------------------                   -----------------    ----------
+Flagship Products                    $153,214           40%
+Accessories                          $63,839          17%
+Other Products                       $38,303          10%
+Subscription Services                $62,033           16%
+Cloud Services                       $37,220           10%
+Professional Services                $24,813           7%
+                                     -----------          ----
+Total                                $379,423          100%
+
+NOTE 3 - SEGMENT INFORMATION
+
+We report our financial performance based on the following reportable segments:
+
+Products: Includes hardware devices, components, and accessories
+Services: Includes subscription services, cloud services, and professional services
+
+Segment operating income for fiscal 2022:
+- Products: $76,136 million
+- Services: $40,996 million
+
+NOTE 4 - INCOME TAXES
+
+The effective tax rate for fiscal 2022 was 21.2%, compared to 
+21.7% for fiscal 2021. The decrease was primarily due to 
+a higher proportion of earnings in lower-tax jurisdictions.
+
+NOTE 5 - DEBT
+
+Long-term debt consists of the following (in millions):
+
+                                    December 31, 2022
+                                    ------------------
+Senior Notes, 2.5%, due 2025        $18,971
+Senior Notes, 3.0%, due 2027        $23,714
+Senior Notes, 3.5%, due 2030        $28,457
+Senior Notes, 4.0%, due 2035        $23,714
+                                    -----------
+Total long-term debt                $94,856
+
+NOTE 6 - COMMITMENTS AND CONTINGENCIES
+
+We are involved in various legal proceedings and claims that arise in the ordinary course of 
+business. We do not believe that the outcome of any of these matters will have a material adverse 
+effect on our financial position, results of operations, or cash flows.
+
+Operating lease commitments for the next five years (in millions):
+- 2023: $2,504
+- 2024: $2,390
+- 2025: $2,277
+- 2026: $2,163
+- 2027: $2,049
+
+NOTE 7 - SHAREHOLDERS' EQUITY
+
+During fiscal 2022, we repurchased 200 million shares of our 
+common stock for a total cost of $31.6 billion. As of December 31, 2022, 
+$56.9 billion remained available under our share repurchase program.
+
+We declared and paid dividends of $1.32 per share during fiscal 2022, 
+totaling $19.8 billion.
+
+===============================================================================
+ITEM 9A. CONTROLS AND PROCEDURES
+===============================================================================
+
+Evaluation of Disclosure Controls and Procedures
+
+Our management, with the participation of our Chief Executive Officer and Chief Financial Officer, 
+evaluated the effectiveness of our disclosure controls and procedures as of December 31, 2022. 
+Based on this evaluation, our CEO and CFO concluded that our disclosure controls and procedures 
+were effective as of December 31, 2022.
+
+Management's Report on Internal Control Over Financial Reporting
+
+Management is responsible for establishing and maintaining adequate internal control over 
+financial reporting. Management assessed the effectiveness of our internal control over 
+financial reporting as of December 31, 2022, based on criteria established in Internal 
+Control — Integrated Framework (2013) issued by the Committee of Sponsoring Organizations 
+of the Treadway Commission. Based on this assessment, management determined that our internal 
+control over financial reporting was effective as of December 31, 2022.
+
+===============================================================================
+END OF FORM 10-K
+===============================================================================

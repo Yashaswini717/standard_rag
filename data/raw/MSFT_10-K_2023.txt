@@ -1,0 +1,368 @@
+
+UNITED STATES SECURITIES AND EXCHANGE COMMISSION
+Washington, D.C. 20549
+FORM 10-K
+
+ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934
+
+For the fiscal year ended December 31, 2023
+
+Commission File Number: 001-71022
+
+Microsoft Corporation
+(Exact name of registrant as specified in its charter)
+
+===============================================================================
+PART I
+===============================================================================
+
+ITEM 1. BUSINESS
+
+Microsoft Corporation (the "Company", "we", "us", or "our") is a leading technology company.
+
+Our Business Overview
+
+For fiscal year 2023, Microsoft Corporation reported total revenue of $231.9 billion, 
+representing a 10.1% increase 
+compared to the prior fiscal year. Net income for 2023 was $57.2 billion.
+
+Revenue Segments:
+- Products: $162.5 billion (70% of total revenue)
+- Services: $69.4 billion (30% of total revenue)
+
+Geographic Revenue Distribution:
+- Americas: $97.4 billion (42%)
+- Europe: $58.0 billion (25%)
+- Greater China: $41.7 billion (18%)
+- Rest of Asia Pacific: $34.8 billion (15%)
+
+===============================================================================
+ITEM 1A. RISK FACTORS
+===============================================================================
+
+Investing in our common stock involves significant risks. The following describes the most significant 
+factors that could adversely affect our business, financial condition, and results of operations.
+
+Market and Economic Risks
+
+Our business is subject to various market and economic conditions. Economic downturns, inflation, 
+changes in consumer spending, and other macroeconomic factors could adversely affect demand for 
+our products and services. In fiscal year 2023, we experienced impacts from global supply chain 
+disruptions and inflationary pressures.
+
+Competition Risk
+
+We face intense competition in all our business segments. Our competitors include large, 
+well-established companies with significant resources. If we are unable to compete effectively, 
+our market share and profitability could decline.
+
+Technology and Cybersecurity Risks
+
+Our business relies heavily on complex technology systems. Cybersecurity threats, system failures, 
+or data breaches could disrupt our operations and harm our reputation. We invested 
+$21.1 billion in research and development during 2023.
+
+===============================================================================
+ITEM 6. SELECTED FINANCIAL DATA
+===============================================================================
+
+FIVE-YEAR FINANCIAL SUMMARY
+(In millions, except per share amounts)
+
+                                    2023          2022        2021
+                                    ------          ------          ------
+Net sales                         $231,859     $220,267     $208,674
+Cost of sales                     $136,980     $130,131     $123,282
+Gross margin                      $94,880     $90,136     $85,392
+Operating income                  $67,046     $61,682     $58,330
+Net income                        $57,225     $53,219     $50,358
+
+Earnings per share:
+  Basic                           $3.81          $3.55          $3.36
+  Diluted                         $3.74          $3.47          $3.28
+
+Cash dividends per share          $0.95          $0.91          $0.86
+
+Total assets                      $278,231     $272,667     $264,320
+Long-term debt                    $57,965     $59,124     $60,863
+Shareholders' equity              $115,930     $110,133     $106,655
+
+===============================================================================
+ITEM 7. MANAGEMENT'S DISCUSSION AND ANALYSIS
+===============================================================================
+
+Executive Overview
+
+Fiscal 2023 Results
+
+Total net revenue for fiscal 2023 was $231.9 billion compared to 
+$210.6 billion in fiscal 2022, 
+an increase of 10.1%. The increase was primarily driven by strong 
+performance in our Services segment and increased demand for our flagship products.
+
+Gross Margin
+
+Gross margin for fiscal 2023 was 40.9%, compared to 
+40.4% in fiscal 2022. The increase in gross margin was 
+primarily due to cost efficiencies and favorable product mix.
+
+Operating Expenses
+
+Research and Development: $21.1 billion (7.1% of revenue)
+Selling, General and Administrative: $12.4 billion (7.6% of revenue)
+
+Net Income and Earnings Per Share
+
+Net income for fiscal 2023 was $57.2 billion, or $3.81 per 
+diluted share, compared to net income of $53.2 billion, or 
+$3.47 per diluted share, in fiscal 2022.
+
+Segment Performance
+
+Products Segment
+
+The Products segment generated revenue of $162.5 billion in fiscal 2023, 
+representing 70% of total revenue. Key product categories include:
+
+- Flagship Products: $97.5 billion
+- Accessories: $40.6 billion
+- Other Products: $24.4 billion
+
+Services Segment
+
+The Services segment generated revenue of $69.4 billion in fiscal 2023, 
+representing 30% of total revenue. Services include:
+
+- Subscription Services: $34.7 billion
+- Cloud Services: $20.8 billion
+- Professional Services: $13.9 billion
+
+===============================================================================
+ITEM 8. FINANCIAL STATEMENTS
+===============================================================================
+
+CONSOLIDATED BALANCE SHEETS
+(In millions)
+                                                    December 31,
+                                               2023          2022
+                                               ------          ------
+ASSETS
+Current assets:
+  Cash and cash equivalents                  $34,779     $38,257
+  Short-term investments                     $27,823     $26,432
+  Accounts receivable, net                   $18,549     $18,178
+  Inventories                                $11,593     $10,666
+  Other current assets                       $23,186     $22,027
+                                             -----------     -----------
+Total current assets                         $115,930     $113,611
+
+Non-current assets:
+  Property, plant and equipment, net         $57,965     $55,067
+  Goodwill                                   $34,779     $34,779
+  Intangible assets, net                     $23,186     $24,345
+  Other non-current assets                   $46,372     $42,662
+                                             -----------     -----------
+Total assets                                 $278,231     $272,667
+
+LIABILITIES AND SHAREHOLDERS' EQUITY
+Current liabilities:
+  Accounts payable                           $23,186     $22,490
+  Accrued expenses                           $18,549     $17,807
+  Current portion of long-term debt          $11,593     $12,752
+  Deferred revenue                           $16,230     $14,932
+                                             -----------     -----------
+Total current liabilities                    $69,558     $68,167
+
+Long-term debt                               $57,965     $59,124
+Other non-current liabilities                $34,779     $34,083
+                                             -----------     -----------
+Total liabilities                            $162,302     $160,679
+
+Shareholders' equity                         $115,930     $110,133
+                                             -----------     -----------
+Total liabilities and equity                 $278,231     $272,667
+
+CONSOLIDATED STATEMENTS OF OPERATIONS
+(In millions, except per share amounts)
+
+                                               Years Ended December 31,
+                                          2023          2022        2021
+                                          ------          ------          ------
+Net sales:
+  Products                              $162,470     $155,971     $149,472
+  Services                              $69,390     $63,839     $61,063
+                                        -----------     -----------     -----------
+Total net sales                         $231,859     $220,267     $208,674
+
+Cost of sales:
+  Products                              $105,605     $101,381     $98,213
+  Services                              $24,286     $22,344     $21,372
+                                        -----------     -----------     -----------
+Total cost of sales                     $136,980     $130,131     $124,652
+
+Gross margin                            $94,880     $90,136     $84,443
+
+Operating expenses:
+  Research and development              $21,135     $20,078     $19,021
+  Selling, general and administrative   $12,357     $11,862     $11,368
+                                        -----------     -----------     -----------
+Total operating expenses                $33,492     $31,985     $30,477
+
+Operating income                        $67,046     $63,693     $59,000
+
+Other income/(expense), net             $2,319     $2,087     $1,971
+                                        -----------     -----------     -----------
+Income before income taxes              $71,531     $67,954     $62,947
+
+Provision for income taxes              $14,306     $13,448     $12,446
+                                        -----------     -----------     -----------
+Net income                              $57,225     $54,650     $50,644
+
+Earnings per share:
+  Basic                                 $3.81          $3.64          $3.38
+  Diluted                               $3.74          $3.59          $3.32
+
+Weighted-average shares outstanding:
+  Basic                                 15,000     15,300     15,750
+  Diluted                               15,200     15,504     15,960
+
+CONSOLIDATED STATEMENTS OF CASH FLOWS
+(In millions)
+
+                                               Years Ended December 31,
+                                          2023          2022
+                                          ------          ------
+Cash flows from operating activities:
+  Net income                            $57,225     $54,650
+  Depreciation and amortization         $9,274     $8,903
+  Stock-based compensation              $4,637     $4,359
+  Changes in working capital            $-2,319     $-2,550
+                                        -----------     -----------
+Net cash from operating activities      $74,392     $70,672
+
+Cash flows from investing activities:
+  Capital expenditures                  ($9,274)    ($9,089)
+  Acquisitions, net of cash             ($4,637)    ($2,319)
+  Purchases of investments              ($34,779)    ($31,301)
+  Sales/maturities of investments       $27,823     $25,597
+                                        -----------     -----------
+Net cash from investing activities      ($18,549)    ($15,766)
+
+Cash flows from financing activities:
+  Dividends paid                        ($14,306)    ($13,734)
+  Share repurchases                     ($22,890)    ($22,432)
+  Proceeds from debt issuance           $4,637     $5,565
+  Repayments of debt                    ($6,956)    ($6,608)
+                                        -----------     -----------
+Net cash from financing activities      ($34,335)    ($31,588)
+
+Net change in cash                      $4,637     $-2,319
+Cash at beginning of period             $30,142     $31,649
+                                        -----------     -----------
+Cash at end of period                   $34,779     $30
+
+===============================================================================
+NOTES TO CONSOLIDATED FINANCIAL STATEMENTS
+===============================================================================
+
+NOTE 1 - SUMMARY OF SIGNIFICANT ACCOUNTING POLICIES
+
+Revenue Recognition
+
+We recognize revenue when we transfer promised goods or services to customers in an amount that 
+reflects the consideration to which we expect to be entitled. For products, revenue is generally 
+recognized at the point in time when control transfers to the customer. For services, revenue 
+is recognized over time as services are delivered.
+
+NOTE 2 - REVENUE
+
+Disaggregation of Revenue
+
+The following table shows revenue by major product and service category for fiscal 2023:
+
+Product Category                     Revenue (millions)    % of Total
+------------------                   -----------------    ----------
+Flagship Products                    $97,482           42%
+Accessories                          $40,617          18%
+Other Products                       $24,370          11%
+Subscription Services                $34,695           15%
+Cloud Services                       $20,817           9%
+Professional Services                $13,878           6%
+                                     -----------          ----
+Total                                $231,859          100%
+
+NOTE 3 - SEGMENT INFORMATION
+
+We report our financial performance based on the following reportable segments:
+
+Products: Includes hardware devices, components, and accessories
+Services: Includes subscription services, cloud services, and professional services
+
+Segment operating income for fiscal 2023:
+- Products: $43,580 million
+- Services: $23,466 million
+
+NOTE 4 - INCOME TAXES
+
+The effective tax rate for fiscal 2023 was 20.7%, compared to 
+21.2% for fiscal 2022. The decrease was primarily due to 
+a higher proportion of earnings in lower-tax jurisdictions.
+
+NOTE 5 - DEBT
+
+Long-term debt consists of the following (in millions):
+
+                                    December 31, 2023
+                                    ------------------
+Senior Notes, 2.5%, due 2025        $11,593
+Senior Notes, 3.0%, due 2027        $14,491
+Senior Notes, 3.5%, due 2030        $17,389
+Senior Notes, 4.0%, due 2035        $14,491
+                                    -----------
+Total long-term debt                $57,965
+
+NOTE 6 - COMMITMENTS AND CONTINGENCIES
+
+We are involved in various legal proceedings and claims that arise in the ordinary course of 
+business. We do not believe that the outcome of any of these matters will have a material adverse 
+effect on our financial position, results of operations, or cash flows.
+
+Operating lease commitments for the next five years (in millions):
+- 2024: $1,530
+- 2025: $1,461
+- 2026: $1,391
+- 2027: $1,322
+- 2028: $1,252
+
+NOTE 7 - SHAREHOLDERS' EQUITY
+
+During fiscal 2023, we repurchased 200 million shares of our 
+common stock for a total cost of $22.9 billion. As of December 31, 2023, 
+$34.8 billion remained available under our share repurchase program.
+
+We declared and paid dividends of $0.95 per share during fiscal 2023, 
+totaling $14.3 billion.
+
+===============================================================================
+ITEM 9A. CONTROLS AND PROCEDURES
+===============================================================================
+
+Evaluation of Disclosure Controls and Procedures
+
+Our management, with the participation of our Chief Executive Officer and Chief Financial Officer, 
+evaluated the effectiveness of our disclosure controls and procedures as of December 31, 2023. 
+Based on this evaluation, our CEO and CFO concluded that our disclosure controls and procedures 
+were effective as of December 31, 2023.
+
+Management's Report on Internal Control Over Financial Reporting
+
+Management is responsible for establishing and maintaining adequate internal control over 
+financial reporting. Management assessed the effectiveness of our internal control over 
+financial reporting as of December 31, 2023, based on criteria established in Internal 
+Control — Integrated Framework (2013) issued by the Committee of Sponsoring Organizations 
+of the Treadway Commission. Based on this assessment, management determined that our internal 
+control over financial reporting was effective as of December 31, 2023.
+
+===============================================================================
+END OF FORM 10-K
+===============================================================================
