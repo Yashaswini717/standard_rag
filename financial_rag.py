@@ -8,15 +8,17 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 from rank_bm25 import BM25Okapi
-from openai import OpenAI
+from openai import OpenAI, BadRequestError
+import json
+import re
+import ast
 
 load_dotenv()
 
 DOCS_PATH = "data/raw" 
 CHROMA_PATH = "data/financial_chroma_db"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-LLM_MODEL = "meta-llama/llama-3-8b-instruct"
-
+LLM_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
 # ============================================================
 # 1. INGESTION - Load and chunk documents
 # ============================================================
@@ -252,60 +254,105 @@ def create_hybrid_retriever(chunks, vectorstore, vector_weight=0.7, bm25_weight=
     return retriever
 
 
+
+# ============================================================
+# LLM HELPERS - one place for OpenRouter calls and reply parsing
+# ============================================================
+def call_llm(system: str, user: str, model=LLM_MODEL, temperature=0.1, max_tokens=2000) -> str:
+    """
+    Send one chat request to OpenRouter and return the reply text.
+    Reasoning models think before answering and those tokens count
+    against max_tokens, so the limit is generous. Asks OpenRouter to keep
+    reasoning out of the reply, and strips <think> blocks if it leaks in.
+    """
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY")
+    )
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user}
+    ]
+    try:
+        response = client.chat.completions.create(
+            model=model, messages=messages, temperature=temperature, max_tokens=max_tokens,
+            extra_body={"reasoning": {"effort": "low", "exclude": True}}
+        )
+    except BadRequestError:
+        # Some providers reject the reasoning option; retry without it
+        response = client.chat.completions.create(
+            model=model, messages=messages, temperature=temperature, max_tokens=max_tokens
+        )
+
+    content = response.choices[0].message.content or ""
+    content = re.sub(r"<think>.*?</think>", "", content, flags=re.DOTALL)
+    return content.strip()
+
+
+def parse_llm_json(content: str, required_key: str) -> dict:
+    """
+    Return the last JSON object in an LLM reply that contains required_key.
+    Models that think out loud write their analysis first, so the answer is
+    the last object. Also accepts Python-style dicts (single quotes, True/False).
+    """
+    decoder = json.JSONDecoder()
+    found = None
+    for match in re.finditer(r"\{", content):
+        try:
+            obj, _ = decoder.raw_decode(content[match.start():])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict) and required_key in obj:
+            found = obj
+    if found is not None:
+        return found
+
+    for match in reversed(list(re.finditer(r"\{[^{}]*\}", content))):
+        text = re.sub(r"\btrue\b", "True", match.group(0))
+        text = re.sub(r"\bfalse\b", "False", text)
+        text = re.sub(r"\bnull\b", "None", text)
+        try:
+            obj = ast.literal_eval(text)
+        except (ValueError, SyntaxError):
+            continue
+        if isinstance(obj, dict) and required_key in obj:
+            return obj
+
+    raise ValueError(f"no JSON with '{required_key}' in reply: {content[:120]!r}")
+
+
+def to_bool(value) -> bool:
+    """Accept true/false as a bool or as a string like "true"."""
+    if isinstance(value, str):
+        return value.strip().lower() in ("true", "yes", "1")
+    return bool(value)
+
 # ============================================================
 # 4. QUERY EXPANSION - Generate multiple query variations
 # ============================================================
 def expand_query(query, model=LLM_MODEL, num_variations=3):
     """Generate multiple variations of the query for better retrieval."""
-    import json
-    import re
-    
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY")
-    )
-    
     prompt = f"""Generate {num_variations} different variations of this financial query to help retrieve relevant SEC 10-K documents.
 Focus on different phrasings, synonyms, and related financial terms.
 
 Original query: "{query}"
 
-Return ONLY a JSON object in this exact format:
+Return ONLY a JSON object in this exact format, with no text before or after it:
 {{"queries": ["variation1", "variation2", "variation3"]}}"""
 
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "You are a financial search query optimizer. Return only valid JSON, no explanations."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.7,
-            max_tokens=300
+        content = call_llm(
+            "You are a financial search query optimizer. Return only valid JSON, no explanations.",
+            prompt, model=model, temperature=0.7
         )
-        
-        content = response.choices[0].message.content.strip()
-        
-        # Handle potential markdown code blocks
-        if "```" in content:
-            # Extract content between code blocks
-            match = re.search(r'```(?:json)?\s*(.*?)\s*```', content, re.DOTALL)
-            if match:
-                content = match.group(1).strip()
-        
-        # Try to find JSON object in the response
-        json_match = re.search(r'\{.*\}', content, re.DOTALL)
-        if json_match:
-            content = json_match.group(0)
-        
-        parsed = json.loads(content)
-        variations = parsed.get("queries", [])
-        
+        parsed = parse_llm_json(content, "queries")
+        variations = [v for v in parsed.get("queries", []) if isinstance(v, str) and v.strip()]
+
         if variations:
             return [query] + variations[:num_variations]  # Include original query
         else:
             return [query]
-            
+
     except Exception as e:
         print(f"    Query expansion failed: {e}")
         return [query]  # Fall back to original query only
@@ -325,14 +372,6 @@ def validate_retrieval(query: str, retrieved_docs: List[Document], model=LLM_MOD
         - reason: str - Why relevant or not
         - missing_info: str - What information is missing (used for rewriting)
     """
-    import json
-    import re
-    
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY")
-    )
-    
     # Build context from retrieved docs
     docs_summary = "\n\n".join([
         f"[Doc {i+1} - {doc.metadata.get('company', 'N/A')} {doc.metadata.get('year', '')}]\n{doc.page_content[:500]}..."
@@ -350,45 +389,28 @@ Analyze carefully:
 1. Does the query ask about a specific company? Do the documents match that company?
 2. Does the query ask about a specific year? Do the documents match that year?
 3. Do the documents contain the specific information requested (revenue, risk factors, etc.)?
+If the query asks about several companies, the documents must contain the information for each of them.
 
-Respond with ONLY a JSON object in this exact format:
+Put your analysis in "reason" in one or two sentences. Respond with ONLY a JSON object, no text before or after it:
 {{
-    "is_relevant": true or false,
-    "confidence": 0.0 to 1.0,
+    "is_relevant": true,
+    "confidence": 0.9,
     "reason": "brief explanation of why relevant or not",
-    "missing_info": "what specific information is missing or wrong (e.g., 'documents are from 2022 but query asks for 2023')"
-}}"""
+    "missing_info": "what is missing or wrong, e.g. documents are from 2022 but query asks for 2023"
+}}
+is_relevant is true or false; confidence is a number from 0.0 to 1.0."""
 
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "You are a strict retrieval validator. Return only valid JSON. Be critical - if there's a year mismatch or company mismatch, mark as not relevant."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.1,
-            max_tokens=300
+        content = call_llm(
+            "You are a strict retrieval validator. Return only valid JSON. Be critical - if there's a year mismatch or company mismatch, mark as not relevant.",
+            prompt, model=model, temperature=0.1
         )
-        
-        content = response.choices[0].message.content.strip()
-        
-        # Handle potential markdown code blocks
-        if "```" in content:
-            match = re.search(r'```(?:json)?\s*(.*?)\s*```', content, re.DOTALL)
-            if match:
-                content = match.group(1).strip()
-        
-        # Try to find JSON object in the response
-        json_match = re.search(r'\{.*\}', content, re.DOTALL)
-        if json_match:
-            content = json_match.group(0)
-        
-        result = json.loads(content)
+        result = parse_llm_json(content, "is_relevant")
         
         # Ensure all required fields exist
         return {
-            "is_relevant": result.get("is_relevant", False),
-            "confidence": result.get("confidence", 0.5),
+            "is_relevant": to_bool(result.get("is_relevant", False)),
+            "confidence": float(result.get("confidence", 0.5)),
             "reason": result.get("reason", "Unknown"),
             "missing_info": result.get("missing_info", "")
         }
@@ -415,11 +437,6 @@ def rewrite_query(original_query: str, validation_result: dict, model=LLM_MODEL)
         - Rewritten query string, OR
         - "QUERY_IMPOSSIBLE" if the data simply doesn't exist in our dataset
     """
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY")
-    )
-    
     prompt = f"""You are a query rewriter for a financial RAG system. The original query failed to retrieve relevant documents.
 
 AVAILABLE DATA: We only have SEC 10-K filings for these 5 companies: Apple (AAPL), Microsoft (MSFT), Google/Alphabet (GOOGL), Amazon (AMZN), Meta/Facebook (META). Years available: 2022 and 2023 only.
@@ -439,24 +456,31 @@ RULES:
    - Add the year (2022 or 2023)
    - Add relevant financial terms from SEC 10-K filings
 
-Return ONLY the rewritten query OR "QUERY_IMPOSSIBLE", nothing else."""
+Respond with ONLY a JSON object, no text before or after it:
+{{"query": "the rewritten search query, one line"}}
+or, if the data is not in our dataset:
+{{"query": "QUERY_IMPOSSIBLE"}}"""
 
     try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "You are a financial search query rewriter. Return only the rewritten query or QUERY_IMPOSSIBLE. No explanations."},
-                {"role": "user", "content": prompt}
-            ],
-            temperature=0.3,
-            max_tokens=150
+        content = call_llm(
+            "You are a financial search query rewriter. Return only JSON. No explanations.",
+            prompt, model=model, temperature=0.3
         )
-        
-        rewritten = response.choices[0].message.content.strip()
-        
-        # Clean up any quotes that might be in the response
-        rewritten = rewritten.strip('"\'')
-        
+        try:
+            rewritten = str(parse_llm_json(content, "query")["query"]).strip().strip('"\'')
+        except ValueError:
+            # No JSON: accept an explicit QUERY_IMPOSSIBLE, otherwise keep the old query
+            # rather than searching with the model's reasoning text
+            if "QUERY_IMPOSSIBLE" in content.upper():
+                return "QUERY_IMPOSSIBLE"
+            print("    Rewrite reply had no query; keeping the current query")
+            return original_query
+
+        if "QUERY_IMPOSSIBLE" in rewritten.upper():
+            return "QUERY_IMPOSSIBLE"
+        if not rewritten or "\n" in rewritten or len(rewritten) > 300:
+            print("    Rewrite reply was not a single query; keeping the current query")
+            return original_query
         return rewritten
         
     except Exception as e:
@@ -469,11 +493,6 @@ Return ONLY the rewritten query OR "QUERY_IMPOSSIBLE", nothing else."""
 # ============================================================
 def generate_answer(query, retrieved_docs, model=LLM_MODEL):
     """Generate answer using OpenRouter LLM."""
-    
-    client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY")
-    )
     
     # Build context from retrieved docs
     context = "\n\n".join([
@@ -495,16 +514,10 @@ RULES:
 
 ANSWER:"""
 
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": "You are a financial analyst assistant that answers questions based on SEC 10-K filings."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.1
+    return call_llm(
+        "You are a financial analyst assistant that answers questions based on SEC 10-K filings.",
+        prompt, model=model, temperature=0.1, max_tokens=3000
     )
-    
-    return response.choices[0].message.content.strip()
 
 
 # ============================================================
